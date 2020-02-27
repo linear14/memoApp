@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="@color/colorMainLight"
+    android:orientation="vertical">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingLeft="12dp"
+        android:paddingBottom="8dp"
+        android:paddingTop="8dp"
+        android:background="@color/colorMainDark"
+        android:text="계좌번호 관리"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        android:textColor="#ffffff"/>
+
+    <EditText
+        android:id="@+id/text_input_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginHorizontal="12dp"
+        android:paddingVertical="3dp"
+        android:paddingHorizontal="8dp"
+        android:background="@drawable/layout_round"
+        android:inputType="text"
+        android:textSize="16sp"
+        android:hint="구분 이름"/>
+
+    <EditText
+        android:id="@+id/text_input_bank"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:layout_marginHorizontal="12dp"
+        android:paddingVertical="3dp"
+        android:paddingHorizontal="8dp"
+        android:background="@drawable/layout_round"
+        android:inputType="text"
+        android:textSize="16sp"
+        android:hint="은행명" />
+
+    <EditText
+        android:id="@+id/text_input_account"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:layout_marginHorizontal="12dp"
+        android:paddingVertical="3dp"
+        android:paddingHorizontal="8dp"
+        android:background="@drawable/layout_round"
+        android:inputType="text"
+        android:textSize="16sp"
+        android:hint="계좌번호" />
+
+    <EditText
+        android:id="@+id/text_input_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="12dp"
+        android:layout_marginHorizontal="12dp"
+        android:paddingVertical="3dp"
+        android:paddingHorizontal="8dp"
+        android:background="@drawable/layout_round"
+        android:inputType="text"
+        android:textSize="16sp"
+        android:hint="소유자 이름" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingHorizontal="12dp"
+        android:textColor="@android:color/black"
+        android:textSize="14sp"
+        android:text="암호 등 중요한 정보는 입력하지 마세요!" />
+
+    <EditText
+        android:id="@+id/text_input_content"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:layout_marginBottom="20dp"
+        android:layout_marginHorizontal="12dp"
+        android:paddingVertical="3dp"
+        android:paddingHorizontal="8dp"
+        android:background="@drawable/layout_round"
+        android:inputType="text"
+        android:textSize="16sp"
+        android:hint="메모" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/button_cancel"
+            android:layout_width="wrap_content"
+            android:layout_height="35dp"
+            android:layout_weight="1"
+            android:background="@color/colorMainDark"
+            android:layout_marginHorizontal="8dp"
+            android:layout_marginBottom="8dp"
+            android:textSize="16sp"
+            android:textColor="#ffffff"
+            android:text="취소" />
+
+        <Button
+            android:id="@+id/button_ok"
+            android:layout_width="wrap_content"
+            android:layout_height="35dp"
+            android:layout_weight="1"
+            android:background="@color/colorMainDark"
+            android:layout_marginRight="8dp"
+            android:layout_marginBottom="8dp"
+            android:textSize="16sp"
+            android:textColor="#ffffff"
+            android:text="확인" />
+    </LinearLayout>
+</LinearLayout>

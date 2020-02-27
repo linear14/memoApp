@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- layout_gravity 필수입니당 ㅎㅎ : start -> 왼쪽, end -> 오른쪽-->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="240dp"
+    android:layout_height="match_parent"
+    android:layout_gravity="end"
+    android:background="@color/colorMain"
+    android:id="@+id/drawer">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="@color/colorMainLight"
+        android:paddingTop="12dp"
+        android:paddingBottom="12dp">
+
+        <Button
+            android:id="@+id/button_setting"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/colorMainLight"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:text="설정" />
+
+        <Button
+            android:id="@+id/button_search"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/colorMainLight"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:text="검색" />
+
+        <Button
+            android:id="@+id/button_edit_folder"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/colorMainLight"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:text="폴더 편집" />
+
+    </LinearLayout>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="15dp"
+        android:gravity="center"
+        android:text="생활 편의" />
+
+    <Button
+        android:id="@+id/button_account"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/colorMain"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        android:text="계좌번호 관리" />
+
+    <Button
+        android:id="@+id/button_shopping"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/colorMain"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        android:text="장보기 목록" />
+
+    <Button
+        android:id="@+id/button_birthday"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/colorMain"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        android:text="생일 관리" />
+
+    <Button
+        android:id="@+id/button_site_id"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/colorMain"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        android:text="사이트 아이디 관리" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="15dp"
+        android:gravity="center"
+        android:text="일반 메모" />
+
+    <!-- 나중에 리사이클러뷰로 메모 폴더 편집시 적용 원활하게 -->
+    <Button
+        android:id="@+id/button_memo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/colorMain"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        android:text="일반 메모" />
+
+</LinearLayout>

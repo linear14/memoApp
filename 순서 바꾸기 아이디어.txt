@@ -1,0 +1,19 @@
+swipe 했을 때,
+ㅇ
+ㅇ
+ㅇ
+ㅇ
+ㅇ
+ㅁ
+ㅇ
+
+date (currentTimeMillis로 받은 Long형 data) 를
+새로운 위치에서
+바로 위의 메모의 date - 1 혹은
+바로 아래의 메모의 date + 1 처리를 해주면 됨
+
+만약 swipe가 위로 됐다면 바로 아래의 메모의 date + 1
+swipe가 아래로 됐다면 바로 위의 메모의 date - 1
+
+위로 된지 어떻게 알지? 기존 date < 아래의 date
+아래로 된지는 어떻게 알지? 기존 date > 위의 date
