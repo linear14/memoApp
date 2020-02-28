@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.dongldh.memoapp">
-    <uses-permission android:name="android.permission.INTERNET"/>
-    <uses-permission android:name="android.permission.VIBRATE"/>
-    <uses-permission android:name="android.permission.WAKE_LOCK"/>
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
 
     <application
         android:allowBackup="true"
@@ -12,7 +13,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".MemoAlarmDialogFragment"/>
+        <activity android:name=".FolderAddDialogFragment"></activity>
+        <activity android:name=".FolderEditActivity" />
+        <activity android:name=".MemoAlarmDialogFragment" />
         <activity android:name=".MemoOrderDialogFragment" />
         <activity android:name=".MemoEditDialogFragment" />
         <activity android:name=".AccountDetailDialogFragment" />
@@ -28,7 +31,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <receiver android:name=".BroadCastAlarm"/>
+
+        <receiver android:name=".BroadCastAlarm" />
     </application>
 
 </manifest>

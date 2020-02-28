@@ -48,7 +48,7 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingTop="15dp"
+        android:paddingTop="14sp"
         android:gravity="center"
         android:text="생활 편의" />
 
@@ -91,18 +91,23 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingTop="15dp"
+        android:paddingTop="14sp"
         android:gravity="center"
         android:text="일반 메모" />
 
     <!-- 나중에 리사이클러뷰로 메모 폴더 편집시 적용 원활하게 -->
-    <Button
+    <!--<Button
         android:id="@+id/button_memo"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/colorMain"
         android:textSize="16sp"
         android:textStyle="bold"
-        android:text="일반 메모" />
+        android:text="일반 메모" />-->
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerView_memo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
 
 </LinearLayout>
