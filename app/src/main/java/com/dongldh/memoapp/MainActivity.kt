@@ -37,18 +37,15 @@ class MainActivity : AppCompatActivity() {
             applicationContext.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
 
         setContentView(R.layout.activity_main)
-        title = "텍스트 메모"
+        title = "일반 메모"
         supportFragmentManager.beginTransaction().replace(R.id.fragment, MemoFragment()).commit()
 
         selectDB()
 
 
         button_edit_folder.setOnClickListener() {
+            drawer_layout.closeDrawer(drawer)
             val intent = Intent(this, FolderEditActivity::class.java)
-            /*intent.putExtra("size", list.size)
-            for(i in 0 until list.size) {
-                intent.putExtra("list${i}", list[i])
-            }*/
             startActivityForResult(intent, 30)
         }
 
@@ -108,7 +105,12 @@ class MainActivity : AppCompatActivity() {
 
             viewHolder.text_menu.setOnClickListener() {
                 title = viewHolder.text_menu.text
-                supportFragmentManager.beginTransaction().replace(R.id.fragment, MemoFragment())
+                val bundle = Bundle()
+                bundle.putString("folder", "${viewHolder.text_menu.text}")
+
+                val memoFragment = MemoFragment()
+                memoFragment.arguments = bundle
+                supportFragmentManager.beginTransaction().replace(R.id.fragment, memoFragment)
                     .commit()
                 drawer_layout.closeDrawer(drawer)
             }

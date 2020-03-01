@@ -15,13 +15,21 @@ import androidx.fragment.app.FragmentManager
 import kotlinx.android.synthetic.main.activity_memo_edit_dialog_fragment.view.*
 
 class MemoEditDialogFragment : DialogFragment() {
+    // 여기다가 folder를 키값으로 하는 bundle 받으면 왜 data가 전달이 안될까? -> onCreateView에다가 해야됨
+    // val folder = arguments?.getString("folder")
+    val memoFragment = MemoFragment()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         isCancelable = false
         val view = inflater.inflate(R.layout.activity_memo_edit_dialog_fragment, container, false)
         val memoVO = (arguments?.getSerializable("memoVO")) as DataItemMemo
-
         val helper = DBHelper(this.context as Context)
+
+        val folder = arguments?.getString("folder")
+        val bundle = Bundle()
+        bundle.putString("folder", folder)
+
+        memoFragment.arguments = bundle
 
         view.memo_menu_edit.setOnClickListener() {
             val intent = Intent(context, MemoEditActivity::class.java)
@@ -39,7 +47,10 @@ class MemoEditDialogFragment : DialogFragment() {
             db.delete("t_memo","num=?", arrayOf(memoVO.num.toString()))
             db.close()
             dismiss()
-            activity?.supportFragmentManager?.beginTransaction()?.replace(R.id.fragment, MemoFragment())?.commit()
+
+            //log
+            // Toast.makeText(this.context, "받아온 값 : $folder", Toast.LENGTH_SHORT).show()
+            activity?.supportFragmentManager?.beginTransaction()?.replace(R.id.fragment, memoFragment)?.commit()
         }
 
         view.memo_menu_alarm.setOnClickListener() {
@@ -75,11 +86,12 @@ class MemoEditDialogFragment : DialogFragment() {
             contentValues.put("title", memoVO.title)
             contentValues.put("content", memoVO.content)
             contentValues.put("date", date.toString())
+            contentValues.put("folder", folder)
 
             db.insert("t_memo", null, contentValues)
             db.close()
             dismiss()
-            activity?.supportFragmentManager?.beginTransaction()?.replace(R.id.fragment, MemoFragment())?.commit()
+            activity?.supportFragmentManager?.beginTransaction()?.replace(R.id.fragment, memoFragment)?.commit()
         }
 
         view.memo_menu_order.setOnClickListener() {
@@ -102,7 +114,7 @@ class MemoEditDialogFragment : DialogFragment() {
 
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == 20 && resultCode == Activity.RESULT_OK) {
-            activity?.supportFragmentManager?.beginTransaction()?.replace(R.id.fragment, MemoFragment())?.commit()
+            activity?.supportFragmentManager?.beginTransaction()?.replace(R.id.fragment, memoFragment)?.commit()
             dismiss()
         }
     }

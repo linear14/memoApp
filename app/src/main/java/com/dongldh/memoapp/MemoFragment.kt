@@ -8,6 +8,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -21,18 +22,26 @@ import java.util.*
 class MemoFragment : Fragment() {
     lateinit var _recyclerView: RecyclerView
     var list: MutableList<DataItemMemo> = mutableListOf()
+    var folder: String? = "일반 메모"
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        Log.d("lifeCycle", "onCreate()")
-        super.onCreate(savedInstanceState)
+        //log
+        // Toast.makeText(this.context, arguments?.getString("folder"), Toast.LENGTH_LONG).show()
 
+        Log.d("lifeCycle", "onCreate()")
+
+        folder = arguments?.getString("folder")
+
+        //log
+        // Toast.makeText(this.context, "받는 값 : $folder", Toast.LENGTH_LONG).show()
+
+        if(folder.isNullOrEmpty()) {
+            folder = "일반 메모"
+        }
+        super.onCreate(savedInstanceState)
     }
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         Log.d("lifeCycle", "onCreateView()")
         var view = inflater.inflate(R.layout.fragment_memo, container, false)
         _recyclerView = view.recyclerView
@@ -49,6 +58,7 @@ class MemoFragment : Fragment() {
 
         floatingActionButton.setOnClickListener() {
             val intent = Intent(context, MemoAddActivity::class.java)
+            intent.putExtra("folder", folder)
             startActivityForResult(intent, 10)
         }
 
@@ -67,7 +77,8 @@ class MemoFragment : Fragment() {
         list = arrayListOf()
         val helper = DBHelper(context as Context)
         val db = helper.readableDatabase
-        val cursor = db.rawQuery("select * from t_memo order by date desc", null)
+        // 체크 ${folder} / '${folder}'
+        val cursor = db.rawQuery("select * from t_memo where folder='${folder}' order by date desc", null)
 
         while (cursor.moveToNext()) {
 
@@ -131,6 +142,7 @@ class MemoFragment : Fragment() {
             viewHolder.text_memo.setOnLongClickListener() {
                 val bundle = Bundle()
                 bundle.putSerializable("memoVO", memoVO)
+                bundle.putString("folder", folder)
 
                 val memoEditDialogFragment = MemoEditDialogFragment()
                 memoEditDialogFragment.arguments = bundle

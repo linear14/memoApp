@@ -16,6 +16,7 @@ class MemoAddActivity : AppCompatActivity() {
         setContentView(R.layout.activity_memo_add)
 
         title = "메모 쓰기"
+        val folder = intent.getStringExtra("folder")
 
         button_memo_add.setOnClickListener(){
             if(!text_input_memo_title.text.toString().isNullOrEmpty() && !text_input_memo_content.text.toString().isNullOrEmpty()) {
@@ -28,6 +29,7 @@ class MemoAddActivity : AppCompatActivity() {
                 contentValues.put("title", text_input_memo_title.text.toString())
                 contentValues.put("content", text_input_memo_content.text.toString())
                 contentValues.put("date", time.toString())
+                contentValues.put("folder", folder)
 
                 // log
                 // Toast.makeText(this, time.toString(), Toast.LENGTH_LONG).show()

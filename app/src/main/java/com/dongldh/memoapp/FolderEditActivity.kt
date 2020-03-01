@@ -1,5 +1,6 @@
 package com.dongldh.memoapp
 
+import android.app.Activity
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -27,6 +28,9 @@ class FolderEditActivity : AppCompatActivity() {
         button_fab.setOnClickListener() {
             FolderAddDialogFragment().show(supportFragmentManager, "dialog_event")
         }
+
+
+
     }
 
     private fun selectDB() {
@@ -42,6 +46,7 @@ class FolderEditActivity : AppCompatActivity() {
         }
         recyclerView.layoutManager = LinearLayoutManager(this)
         recyclerView.adapter = FolderEditAdapter(list)
+        setResult(Activity.RESULT_OK)
     }
 
     class FolderEditViewHolder(view: View): RecyclerView.ViewHolder(view) {
