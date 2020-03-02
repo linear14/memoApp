@@ -68,6 +68,15 @@ class FolderEditActivity : AppCompatActivity() {
             val viewHolder = holder as FolderEditViewHolder
 
             viewHolder.text_menu_edit.text = menuVO.title
+            viewHolder.itemView.setOnClickListener() {
+                val bundle = Bundle()
+                bundle.putString("title", menuVO.title)
+
+                val folderManageDFragment = FolderManageDFragment()
+                folderManageDFragment.arguments = bundle
+
+                folderManageDFragment.show(supportFragmentManager, "dialog_event")
+            }
         }
 
     }

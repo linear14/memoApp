@@ -7,7 +7,7 @@ import android.database.sqlite.SQLiteOpenHelper
 class DBHelper(context: Context): SQLiteOpenHelper(context, "memoDB", null, 1) {
     override fun onCreate(db: SQLiteDatabase?) {
         val menuSQL = "create table t_menu " +
-                "(num integer primary key autoincrement, title)"
+                "(num integer primary key autoincrement, title, password)"
         val menuInitSQL = "insert into t_menu (title) values ('일반 메모')"
 
 

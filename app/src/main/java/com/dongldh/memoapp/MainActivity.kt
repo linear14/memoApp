@@ -1,20 +1,25 @@
 package com.dongldh.memoapp
 
 import android.app.Activity
+import android.app.Dialog
 import android.content.Context
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.*
 import android.view.inputmethod.InputMethodManager
+import android.widget.Toast
 import android.widget.Toolbar
 import androidx.core.content.ContextCompat
+import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.activity_password_dialog_frgment.view.*
 import kotlinx.android.synthetic.main.fragment_memo.*
+import kotlinx.android.synthetic.main.fragment_password.view.*
 import kotlinx.android.synthetic.main.item_edit.view.*
 import kotlinx.android.synthetic.main.item_menu.view.text_menu
 import kotlinx.android.synthetic.main.item_memo.view.*
@@ -108,11 +113,27 @@ class MainActivity : AppCompatActivity() {
                 val bundle = Bundle()
                 bundle.putString("folder", "${viewHolder.text_menu.text}")
 
-                val memoFragment = MemoFragment()
-                memoFragment.arguments = bundle
-                supportFragmentManager.beginTransaction().replace(R.id.fragment, memoFragment)
-                    .commit()
-                drawer_layout.closeDrawer(drawer)
+                val helper = DBHelper(applicationContext)
+                val db = helper.writableDatabase
+                val cursor = db.rawQuery("select password from t_menu where title='${menuVO.title}'", null)
+                cursor.moveToNext()
+                val password: String? = cursor.getString(0)
+
+                when {
+                    password.isNullOrEmpty() -> {
+                        val memoFragment = MemoFragment()
+                        memoFragment.arguments = bundle
+                        supportFragmentManager.beginTransaction().replace(R.id.fragment, memoFragment).commit()
+                        drawer_layout.closeDrawer(drawer)
+                    }
+                    else -> {
+                        bundle.putString("password", password)
+                        val passwordFragment = PasswordFragment()
+                        passwordFragment.arguments = bundle
+                        supportFragmentManager.beginTransaction().replace(R.id.fragment, passwordFragment).commit()
+                        drawer_layout.closeDrawer(drawer)
+                    }
+                }
             }
         }
 
@@ -139,6 +160,69 @@ class MainActivity : AppCompatActivity() {
 
 }
 
+
+// 비밀번호가 등록 되어 있으면 아래 프래그먼트로 이동
+class PasswordFragment: Fragment() {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        val view = inflater.inflate(R.layout.fragment_password, container, false)
+        val folder = arguments?.getString("folder")
+        val password = arguments?.getString("password")
+
+        val bundle = Bundle()
+        bundle.putString("folder", folder)
+        bundle.putString("password", password)
+
+        val passwordDialog = PasswordDialogFragment()
+        passwordDialog.arguments = bundle
+
+        view.passwordView.setOnClickListener() {
+            passwordDialog.show(
+                activity?.supportFragmentManager as FragmentManager, "dialog_event"
+            )
+        }
+        return view
+    }
+}
+
+
+// 비밀번호 입력 란
+class PasswordDialogFragment: DialogFragment() {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        val view = inflater.inflate(R.layout.activity_password_dialog_frgment, container, false)
+        isCancelable = false
+
+        val folder = arguments?.getString("folder")
+        val password = arguments?.getString("password")
+
+        val bundle = Bundle()
+        bundle.putString("folder", folder)
+
+        view.button_cancel_password.setOnClickListener() {
+            dismiss()
+        }
+
+        view.button_ok_password.setOnClickListener() {
+            when {
+                view.password.text.toString().isNullOrEmpty() -> {
+                    view.password.setText("")
+                    Toast.makeText(this.context as Context, "비밀번호를 입력하세요", Toast.LENGTH_SHORT).show()
+                }
+                !view.password.text.toString().equals(password) -> {
+                    Toast.makeText(this.context as Context, "비밀번호가 일치하지 않습니다", Toast.LENGTH_SHORT).show()
+                }
+                else -> {
+                    Toast.makeText(this.context as Context, "비밀번호 일치", Toast.LENGTH_SHORT).show()
+                    val memoFragment = MemoFragment()
+                    memoFragment.arguments = bundle
+                    activity?.supportFragmentManager?.beginTransaction()?.replace(R.id.fragment, memoFragment)?.commit()
+                    dismiss()
+
+                }
+            }
+        }
+        return view
+    }
+}
 
 
 
