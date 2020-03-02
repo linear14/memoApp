@@ -33,7 +33,7 @@ lateinit var inputMethodManager: InputMethodManager
 class MainActivity : AppCompatActivity() {
 
     var list: MutableList<DataItemMenu> = mutableListOf()
-
+    val helper = DBHelper(this)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         // deleteDatabase("memoDB")  // 만들어져있던 데이터베이스 삭제 -> 새로운 기능 추가 시 활성화
@@ -42,11 +42,33 @@ class MainActivity : AppCompatActivity() {
             applicationContext.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
 
         setContentView(R.layout.activity_main)
-        title = "일반 메모"
-        supportFragmentManager.beginTransaction().replace(R.id.fragment, MemoFragment()).commit()
+        val db = helper.writableDatabase
+        val cursor = db.rawQuery("select title, password from t_menu", null)
+        cursor.moveToNext()
+
+        title = cursor.getString(0)
+        val password = cursor.getString(1)
+        cursor.close()
+        db.close()
+
+        val bundle = Bundle()
+        bundle.putString("folder", title.toString())
+
+        when {
+            password.isNullOrEmpty() -> {
+                val memoFragment = MemoFragment()
+                memoFragment.arguments = bundle
+                supportFragmentManager.beginTransaction().replace(R.id.fragment, memoFragment).commit()
+            }
+            else -> {
+                bundle.putString("password", password)
+                val passwordFragment = PasswordFragment()
+                passwordFragment.arguments = bundle
+                supportFragmentManager.beginTransaction().replace(R.id.fragment, passwordFragment).commit()
+            }
+        }
 
         selectDB()
-
 
         button_edit_folder.setOnClickListener() {
             drawer_layout.closeDrawer(drawer)
@@ -66,12 +88,12 @@ class MainActivity : AppCompatActivity() {
         super.onActivityResult(requestCode, resultCode, data)
         if(requestCode == 30 && resultCode == Activity.RESULT_OK) {
             selectDB()
+            recreate()
         }
     }
 
     private fun selectDB() {
         list = arrayListOf()
-        val helper = DBHelper(this)
         val db = helper.readableDatabase
         val cursor = db.rawQuery("select * from t_menu", null)
 
@@ -83,6 +105,9 @@ class MainActivity : AppCompatActivity() {
         }
         recyclerView_memo.layoutManager = LinearLayoutManager(this)
         recyclerView_memo.adapter = MenuAdapter(list)
+
+        cursor.close()
+        db.close()
     }
 
     class MenuViewHolder(view: View) : RecyclerView.ViewHolder(view) {
@@ -146,7 +171,9 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        inputMethodManager.hideSoftInputFromWindow(input_edit.windowToken, 0)
+        if(input_edit != null) {
+            inputMethodManager.hideSoftInputFromWindow(input_edit.windowToken, 0)
+        }
         when (item.itemId) {
             R.id.action_open_drawer -> {
                 drawer_layout.openDrawer(drawer)

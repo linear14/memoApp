@@ -29,8 +29,6 @@ class FolderEditActivity : AppCompatActivity() {
             FolderAddDialogFragment().show(supportFragmentManager, "dialog_event")
         }
 
-
-
     }
 
     private fun selectDB() {
@@ -47,6 +45,9 @@ class FolderEditActivity : AppCompatActivity() {
         recyclerView.layoutManager = LinearLayoutManager(this)
         recyclerView.adapter = FolderEditAdapter(list)
         setResult(Activity.RESULT_OK)
+
+        cursor.close()
+        db.close()
     }
 
     class FolderEditViewHolder(view: View): RecyclerView.ViewHolder(view) {
@@ -80,6 +81,5 @@ class FolderEditActivity : AppCompatActivity() {
         }
 
     }
-
 
 }
