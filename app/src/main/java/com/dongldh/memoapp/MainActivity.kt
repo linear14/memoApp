@@ -46,29 +46,36 @@ class MainActivity : AppCompatActivity() {
         val cursor = db.rawQuery("select title, password from t_menu", null)
         cursor.moveToNext()
 
-        title = cursor.getString(0)
-        val password = cursor.getString(1)
-        cursor.close()
-        db.close()
+        try {
+            title = cursor.getString(0)
+            val password = cursor.getString(1)
 
-        val bundle = Bundle()
-        bundle.putString("folder", title.toString())
+            val bundle = Bundle()
+            bundle.putString("folder", title.toString())
 
-        when {
-            password.isNullOrEmpty() -> {
-                val memoFragment = MemoFragment()
-                memoFragment.arguments = bundle
-                supportFragmentManager.beginTransaction().replace(R.id.fragment, memoFragment).commit()
+            when {
+                password.isNullOrEmpty() -> {
+                    val memoFragment = MemoFragment()
+                    memoFragment.arguments = bundle
+                    supportFragmentManager.beginTransaction().replace(R.id.fragment, memoFragment)
+                        .commit()
+                }
+                else -> {
+                    bundle.putString("password", password)
+                    val passwordFragment = PasswordFragment()
+                    passwordFragment.arguments = bundle
+                    supportFragmentManager.beginTransaction()
+                        .replace(R.id.fragment, passwordFragment).commit()
+                }
             }
-            else -> {
-                bundle.putString("password", password)
-                val passwordFragment = PasswordFragment()
-                passwordFragment.arguments = bundle
-                supportFragmentManager.beginTransaction().replace(R.id.fragment, passwordFragment).commit()
-            }
+            selectDB()
+        } catch (e: Exception) {
+            supportFragmentManager.beginTransaction().replace(R.id.fragment, BlankFragment())
+                .commit()
+        } finally {
+            cursor.close()
+            db.close()
         }
-
-        selectDB()
 
         button_edit_folder.setOnClickListener() {
             drawer_layout.closeDrawer(drawer)
@@ -86,7 +93,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if(requestCode == 30 && resultCode == Activity.RESULT_OK) {
+        if (requestCode == 30 && resultCode == Activity.RESULT_OK) {
             selectDB()
             recreate()
         }
@@ -140,7 +147,8 @@ class MainActivity : AppCompatActivity() {
 
                 val helper = DBHelper(applicationContext)
                 val db = helper.writableDatabase
-                val cursor = db.rawQuery("select password from t_menu where title='${menuVO.title}'", null)
+                val cursor =
+                    db.rawQuery("select password from t_menu where title='${menuVO.title}'", null)
                 cursor.moveToNext()
                 val password: String? = cursor.getString(0)
 
@@ -148,14 +156,16 @@ class MainActivity : AppCompatActivity() {
                     password.isNullOrEmpty() -> {
                         val memoFragment = MemoFragment()
                         memoFragment.arguments = bundle
-                        supportFragmentManager.beginTransaction().replace(R.id.fragment, memoFragment).commit()
+                        supportFragmentManager.beginTransaction()
+                            .replace(R.id.fragment, memoFragment).commit()
                         drawer_layout.closeDrawer(drawer)
                     }
                     else -> {
                         bundle.putString("password", password)
                         val passwordFragment = PasswordFragment()
                         passwordFragment.arguments = bundle
-                        supportFragmentManager.beginTransaction().replace(R.id.fragment, passwordFragment).commit()
+                        supportFragmentManager.beginTransaction()
+                            .replace(R.id.fragment, passwordFragment).commit()
                         drawer_layout.closeDrawer(drawer)
                     }
                 }
@@ -171,8 +181,8 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        if(input_edit != null) {
-            inputMethodManager.hideSoftInputFromWindow(input_edit.windowToken, 0)
+        if (search != null) {
+            inputMethodManager.hideSoftInputFromWindow(search.windowToken, 0)
         }
         when (item.itemId) {
             R.id.action_open_drawer -> {
@@ -189,8 +199,12 @@ class MainActivity : AppCompatActivity() {
 
 
 // 비밀번호가 등록 되어 있으면 아래 프래그먼트로 이동
-class PasswordFragment: Fragment() {
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+class PasswordFragment : Fragment() {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         val view = inflater.inflate(R.layout.fragment_password, container, false)
         val folder = arguments?.getString("folder")
         val password = arguments?.getString("password")
@@ -213,8 +227,12 @@ class PasswordFragment: Fragment() {
 
 
 // 비밀번호 입력 란
-class PasswordDialogFragment: DialogFragment() {
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+class PasswordDialogFragment : DialogFragment() {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         val view = inflater.inflate(R.layout.activity_password_dialog_frgment, container, false)
         isCancelable = false
 
@@ -232,22 +250,35 @@ class PasswordDialogFragment: DialogFragment() {
             when {
                 view.password.text.toString().isNullOrEmpty() -> {
                     view.password.setText("")
-                    Toast.makeText(this.context as Context, "비밀번호를 입력하세요", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this.context as Context, "비밀번호를 입력하세요", Toast.LENGTH_SHORT)
+                        .show()
                 }
                 !view.password.text.toString().equals(password) -> {
-                    Toast.makeText(this.context as Context, "비밀번호가 일치하지 않습니다", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this.context as Context, "비밀번호가 일치하지 않습니다", Toast.LENGTH_SHORT)
+                        .show()
                 }
                 else -> {
                     Toast.makeText(this.context as Context, "비밀번호 일치", Toast.LENGTH_SHORT).show()
                     val memoFragment = MemoFragment()
                     memoFragment.arguments = bundle
-                    activity?.supportFragmentManager?.beginTransaction()?.replace(R.id.fragment, memoFragment)?.commit()
+                    activity?.supportFragmentManager?.beginTransaction()
+                        ?.replace(R.id.fragment, memoFragment)?.commit()
                     dismiss()
 
                 }
             }
         }
         return view
+    }
+}
+
+class BlankFragment : Fragment() {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        return inflater.inflate(R.layout.fragment_blank, container, false)
     }
 }
 

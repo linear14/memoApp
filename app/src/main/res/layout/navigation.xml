@@ -1,12 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- layout_gravity 필수입니당 ㅎㅎ : start -> 왼쪽, end -> 오른쪽-->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:layout_width="240dp"
     android:layout_height="match_parent"
     android:layout_gravity="end"
     android:background="@color/colorMain"
-    android:id="@+id/drawer">
+    android:id="@+id/drawer"
+    app:headerLayout="@layout/nav_header">
 
     <LinearLayout
         android:layout_width="match_parent"

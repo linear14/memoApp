@@ -3,7 +3,10 @@ package com.dongldh.memoapp
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
+import android.database.Cursor
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -14,6 +17,7 @@ import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import kotlinx.android.synthetic.main.fragment_memo.*
 import kotlinx.android.synthetic.main.fragment_memo.view.*
 import kotlinx.android.synthetic.main.item_memo.view.*
 import java.text.SimpleDateFormat
@@ -49,12 +53,26 @@ class MemoFragment : Fragment() {
         val floatingActionButton: FloatingActionButton = view.button_fab
         selectDB()
 
-        view.input_edit.setOnFocusChangeListener{v, hasFocus ->
+        view.search.setOnFocusChangeListener{v, hasFocus ->
            when(hasFocus) {
                true -> inputMethodManager.showSoftInput(v, 0)
                false -> inputMethodManager.hideSoftInputFromWindow(v.windowToken, 0)
            }
         }
+
+        view.search.addTextChangedListener(object: TextWatcher {
+            override fun afterTextChanged(s: Editable?) {
+                val text = view.search.text.toString()
+                selectDB(text)
+            }
+
+
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+            }
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+            }
+        })
 
         floatingActionButton.setOnClickListener() {
             val intent = Intent(context, MemoAddActivity::class.java)
@@ -73,12 +91,19 @@ class MemoFragment : Fragment() {
         }
     }
 
-    private fun selectDB() {
+    private fun selectDB(text: String? = null) {
         list = arrayListOf()
         val helper = DBHelper(context as Context)
-        val db = helper.readableDatabase
+        val db = helper.writableDatabase
+        var cursor: Cursor? = null
         // 체크 ${folder} / '${folder}'
-        val cursor = db.rawQuery("select * from t_memo where folder='${folder}' order by date desc", null)
+        if(text.isNullOrEmpty()) {
+            cursor = db.rawQuery("select * from t_memo where folder='${folder}' order by date desc", null)
+        } else {
+            // log (검색란에 글 입력할 때 리스너 작동 -> selectDB 이동하는지 확인했음)
+            // Toast.makeText(context, "작동", Toast.LENGTH_SHORT).show()
+            cursor = db.rawQuery("select * from t_memo where folder='${folder}' and (title like '%${text}%' or content like '%${text}%') order by date desc", null)
+        }
 
         while (cursor.moveToNext()) {
 
